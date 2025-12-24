@@ -18,7 +18,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 
-const PORT = 3000;
+// ✅ FIXED PORT (Render-safe)
+const PORT = process.env.PORT || 3000;
+
 const BOOKING_FILE = path.join(__dirname, "bookings.json");
 
 /* ---------- HELPERS ---------- */
@@ -181,5 +183,5 @@ app.post("/send-email", async (req, res) => {
 
 /* ---------- START ---------- */
 app.listen(PORT, () =>
-  console.log(`✅ Server running http://localhost:${PORT}`)
+  console.log(`✅ Server running on port ${PORT}`)
 );
