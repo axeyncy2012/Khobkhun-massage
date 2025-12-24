@@ -2,10 +2,10 @@ import "dotenv/config";
 import express from "express";
 import fs from "fs";
 import cors from "cors";
-import nodemailer from "nodemailer";
 import path from "path";
 import { fileURLToPath } from "url";
-import { DateTime } from "luxon"; 
+import { DateTime } from "luxon";
+import fetch from "node-fetch"; // <-- new import for Brevo API
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,9 +18,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 
-// ✅ FIXED PORT (Render-safe)
-const PORT = process.env.PORT || 3000;
-
+const PORT = process.env.PORT || 10000; // use Render's port if provided
 const BOOKING_FILE = path.join(__dirname, "bookings.json");
 
 /* ---------- HELPERS ---------- */
@@ -43,18 +41,6 @@ function blocksFromMinutes(min) {
   return Math.ceil(Number(min) / 30);
 }
 
-/* ---------- EMAIL ---------- */
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT),
-  secure: false,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS
-  }
-});
-
-
 /* ---------- AVAILABLE SLOTS ---------- */
 app.get("/available", (req, res) => {
   try {
@@ -64,11 +50,9 @@ app.get("/available", (req, res) => {
     const totalBlocks = blocksFromMinutes(minutes);
     const bookings = getBookings();
 
-    // ⏰ Business hours (NL time)
     const startHour = 11.5;
     const endHour = 19;
 
-    // 🕒 CURRENT TIME IN NETHERLANDS (SAFE)
     const now = DateTime.now().setZone(BUSINESS_TZ);
     const todayStr = now.toISODate();
 
@@ -77,15 +61,11 @@ app.get("/available", (req, res) => {
       allSlots.push(h);
     }
 
-    // ❌ Remove past time slots ONLY if booking is today (NL time)
     if (date === todayStr) {
-      const currentTime =
-        now.hour + (now.minute >= 30 ? 0.5 : 0);
-
+      const currentTime = now.hour + (now.minute >= 30 ? 0.5 : 0);
       allSlots = allSlots.filter(t => t > currentTime);
     }
 
-    // Block already booked slots
     let blocked = [];
     bookings
       .filter(b => b.date === date)
@@ -95,7 +75,6 @@ app.get("/available", (req, res) => {
         }
       });
 
-    // Final availability check
     const available = allSlots.filter(start => {
       for (let i = 0; i < totalBlocks; i++) {
         if (blocked.includes(start + i * 0.5)) return false;
@@ -110,7 +89,7 @@ app.get("/available", (req, res) => {
   }
 });
 
-/* ---------- BOOK + EMAIL ---------- */
+/* ---------- BOOK + EMAIL USING BREVO API ---------- */
 app.post("/send-email", async (req, res) => {
   try {
     const {
@@ -130,10 +109,9 @@ app.post("/send-email", async (req, res) => {
     }
 
     // Convert time to decimal
-    const start =
-      time.includes(":")
-        ? Number(time.split(":")[0]) + (time.includes("30") ? 0.5 : 0)
-        : Number(time);
+    const start = time.includes(":")
+      ? Number(time.split(":")[0]) + (time.includes("30") ? 0.5 : 0)
+      : Number(time);
 
     const blocks = blocksFromMinutes(totalMinutes);
     const bookings = getBookings();
@@ -155,13 +133,13 @@ app.post("/send-email", async (req, res) => {
     // SAVE BOOKING FIRST (CRITICAL)
     saveBooking({ date, start, blocks });
 
-    // TRY EMAIL (DO NOT FAIL BOOKING)
+    // SEND EMAIL VIA BREVO API (HTTP, no SMTP)
     try {
-      await transporter.sendMail({
-        from: `"Khobkhun Thai massage in Groningen" <${process.env.EMAIL_USER}>`,
-        to: receiverEmail,
+      const emailData = {
+        sender: { email: process.env.BREVO_SENDER_EMAIL, name: "Khobkhun Thai Massage" },
+        to: [{ email: receiverEmail }],
         subject: "New Booking",
-        html: `
+        htmlContent: `
           <p><b>Name:</b> ${senderName}</p>
           <p><b>Email:</b> ${customerEmail}</p>
           <p><b>Phone:</b> ${telephone}</p>
@@ -170,12 +148,25 @@ app.post("/send-email", async (req, res) => {
           <p><b>Time:</b> ${time} (NL time)</p>
           <p><b>Total:</b> €${total}</p>
         `
+      };
+
+      const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: {
+          "api-key": process.env.BREVO_API_KEY,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(emailData)
       });
+
+      if (!response.ok) {
+        const text = await response.text();
+        console.error("Brevo API error:", text);
+      }
     } catch (mailErr) {
       console.error("Email failed (ignored):", mailErr);
     }
 
-    // ALWAYS SUCCESS IF BOOKED
     res.json({ success: true });
 
   } catch (err) {
@@ -188,5 +179,3 @@ app.post("/send-email", async (req, res) => {
 app.listen(PORT, () =>
   console.log(`✅ Server running on port ${PORT}`)
 );
-
-
