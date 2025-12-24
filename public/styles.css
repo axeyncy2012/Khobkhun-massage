@@ -98,28 +98,49 @@ h1{
 
 .magazine-layout {
   display: flex;
+  flex-wrap: wrap; /* allow items to stack on small screens */
   align-items: center;
-  gap: 40px;                 
+  gap: 20px; /* smaller gap for mobile */
   max-width: 1200px;
-  margin: 30px auto;      
-  padding: 0 40px;
+  margin: 30px auto;
+  padding: 0 20px; /* smaller padding for mobile */
+  box-sizing: border-box;
 }
 
 .img1 {
-  width: 280px;             /* ⬇ smaller image */
-  height: 300px;
+  width: 100%;
+  max-width: 280px; /* keep original size on desktop */
+  height: auto; /* maintain aspect ratio */
   object-fit: cover;
+  flex-shrink: 0; /* prevent image from shrinking too small */
 }
 
 .paraph {
   flex: 1;
   text-align: justify;
-  margin-right: 150px;
+  margin: 0; /* remove fixed margin */
 }
 
 .paraph p {
-  line-height: 2;         /* slightly tighter */
+  line-height: 1.8;
   font-size: 18px;
+}
+
+/* Responsive for small screens */
+@media (max-width: 768px) {
+  .magazine-layout {
+    flex-direction: column; /* stack image and text */
+    align-items: flex-start;
+  }
+
+  .img1 {
+    max-width: 100%; /* image takes full width */
+  }
+
+  .paraph {
+    margin-right: 0;
+    width: 100%;
+  }
 }
 
 .section2 {
@@ -807,3 +828,4 @@ select {
   border-radius: 5px;
   cursor: pointer;
 }
+
