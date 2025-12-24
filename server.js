@@ -45,16 +45,13 @@ function blocksFromMinutes(min) {
 
 /* ---------- EMAIL ---------- */
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT),
+  secure: false,
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  },
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 10000
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS
+  }
 });
 
 
@@ -191,4 +188,5 @@ app.post("/send-email", async (req, res) => {
 app.listen(PORT, () =>
   console.log(`✅ Server running on port ${PORT}`)
 );
+
 
