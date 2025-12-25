@@ -117,13 +117,17 @@ h1{
 
 .paraph {
   flex: 1;
-  text-align: justify;
-  margin: 0; /* remove fixed margin */
+  margin: 0;
 }
 
+/* Desktop & tablet text */
 .paraph p {
   line-height: 1.8;
   font-size: 18px;
+  text-align: justify;
+  hyphens: auto;
+  word-break: normal;
+  overflow-wrap: normal;
 }
 
 /* Responsive for small screens */
@@ -134,12 +138,19 @@ h1{
   }
 
   .img1 {
-    max-width: 100%; /* image takes full width */
+    max-width: 100%;
+    height: auto;
   }
 
   .paraph {
-    margin-right: 0;
     width: 100%;
+  }
+
+  /* 🔑 MOBILE TEXT FIX */
+  .paraph p {
+    text-align: left;   /* stop ugly word breaking */
+    hyphens: none;
+    font-size: 16px;    /* better readability on phones */
   }
 }
 
@@ -828,4 +839,5 @@ select {
   border-radius: 5px;
   cursor: pointer;
 }
+
 
