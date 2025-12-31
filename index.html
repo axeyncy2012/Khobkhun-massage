@@ -93,9 +93,9 @@
         </div>
     </div>
     <div class="menu-button-div">
-      <button type="button" class="menu-button">
+      <button type="button" id="menuBtn" class="menu-button">Review Menu</button>
       </div>
-    <div class="table-div">
+    <div class="table-div" id="menuTable">
       <p>MENU</p>
       <table>
         <tr>
@@ -272,9 +272,25 @@
   <p>Copyright © 2026 Khobkhunthaimassage.nl</p>
 </div>
 </body>
+<script>
+  const menuBtn = document.getElementById("menuBtn");
+  const menuTable = document.getElementById("menuTable");
+
+  menuBtn.addEventListener("click", () => {
+    if (menuTable.style.display === "none" || menuTable.style.display === "") {
+      menuTable.style.display = "block";
+      menuBtn.textContent = "Hide Menu";
+    } else {
+      menuTable.style.display = "none";
+      menuBtn.textContent = "Review Menu";
+    }
+  });
+</script>
+
 </html>
 
   
+
 
 
 
