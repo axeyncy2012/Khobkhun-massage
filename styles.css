@@ -1,0 +1,394 @@
+* {
+  font-family: "Tenor Sans", serif;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  overflow-x: hidden; /* prevent horizontal scroll */
+  background-color: #000000;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: start;   /* top-align text with logo */
+  padding: 20px;
+}
+
+.logo {
+  grid-column: 2;       /* force logo into center column */
+  width: 320px;
+  height: 250px;
+  margin: 0 auto;
+}
+
+.line1{
+  justify-content: center;
+  margin: 0 100px;
+  height: 1px;
+  border: none;
+  background: linear-gradient(to right, gold, white);
+}
+
+.header-text {
+  grid-column: 3;       /* right column */
+  text-align: right;
+}
+
+.section2 {
+  width: 100%;
+  min-height: 100vh;
+  background-image: linear-gradient(to top, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.7) 100%), url("milad-fakurian-aaSTQ-wY5DQ-unsplash.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 0 10px 15px rgba(0, 0, 0, 0.5);
+
+}
+
+.img-back{
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0.7) 100%), url("S__3826051.jpg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-size: cover; 
+  background-position: center; 
+  width: 100%;
+  height: 100%;;
+}
+
+h1{
+  text-align: center;
+  margin-bottom: 0;
+  letter-spacing: 2px;
+}
+
+.slogan1{
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  font-size: 35px;
+  font-weight: 100;
+  color: rgba(255, 255, 255, 0.8);
+  letter-spacing: 2px;
+}
+
+.slogan2{
+  text-align: center;
+  margin-top: 15px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  font-size: 30px;
+  font-weight: 100;
+  color: rgba(255, 255, 255, 0.8);
+  letter-spacing: 2px;
+
+}
+
+.magazine-layout {
+  display: flex;
+  flex-wrap: wrap; /* allow items to stack on small screens */
+  align-items: center;
+  gap: 20px; /* smaller gap for mobile */
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 0 20px; /* smaller padding for mobile */
+  box-sizing: border-box;
+}
+
+.img1 {
+  width: 100%;
+  max-width: 280px; /* keep original size on desktop */
+  height: auto; /* maintain aspect ratio */
+  object-fit: cover;
+  flex-shrink: 0; /* prevent image from shrinking too small */
+}
+
+.paraph {
+  flex: 1;
+  margin: 0;
+}
+
+/* Desktop & tablet text */
+.paraph p {
+  line-height: 1.8;
+  font-size: 18px;
+  text-align: justify;
+  hyphens: auto;
+  word-break: normal;
+  overflow-wrap: normal;
+}
+
+/* Responsive for small screens */
+@media (max-width: 768px) {
+  .magazine-layout {
+    flex-direction: column; /* stack image and text */
+    align-items: flex-start;
+  }
+
+  .img1 {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .paraph {
+    width: 100%;
+  }
+
+  /* 🔑 MOBILE TEXT FIX */
+  .paraph p {
+    text-align: left;   /* stop ugly word breaking */
+    hyphens: none;
+    font-size: 16px;    /* better readability on phones */
+  }
+}
+
+.section2 {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.img1{
+  margin-top: 20px;
+  width: 350px;
+  height: 300px;
+  box-shadow: 0 0 10px 15px rgba(0, 0, 0, 0.5);
+}
+
+/*Card section*/
+.card-row {
+    display: flex;
+    justify-content: center;
+    gap: 30px;                
+    margin-top: 30px;
+    flex-wrap: wrap;    
+  /*display: inline-flex;*/
+  overflow: visible;
+  transition: transform 0.3s ease-out;
+  cursor: grab;     
+}
+
+.card {
+    border: none;
+    background-color: #362018;
+    background-image: linear-gradient(black, #362018, #694E37);
+    border-radius: 10px;
+    width: 300px;            
+    padding: 25px;
+    color: #fff;
+    transition: width 2s, height 4s;
+}
+
+.card:hover{
+  width: 420px;
+  padding: 30px;
+  -ms-transform: scale(1.1); /* IE 9 */
+  -webkit-transform: scale(1.1); /* Safari 3-8 */
+  transform: scale(1.1);
+  cursor: pointer;
+  box-shadow: 0 8px 8px 0 rgba(255, 255, 255, 0.2);
+}
+
+.card img {
+    width: 100%;          /* Fit card width */
+    height: auto;         /* Keep aspect ratio */
+    max-height: 180px;    /* Optional: prevent it from being too tall */
+    object-fit: contain;  /* Ensure full image is visible */
+    margin-bottom: 15px;
+    display: block;
+}
+
+.card-line {
+    width: 50%;
+    border: 0;
+    border-top: 1px solid #b08b38;
+    margin: 15px auto;
+}
+
+
+/*--------------------------------------------------*/
+.callout {
+  position: fixed;
+  bottom: 300px;
+  right: 20px;
+  max-width: 400px;
+  background: #33180b;              
+  border: 2px solid #ff974d;       
+  border-radius: 12px;
+  padding: 16px 40px 16px 16px;     
+  color: #ffffff;
+  box-shadow: 0 0 15px rgba(255, 154, 77, 0.3);
+}
+
+/* Content row */
+.callout-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Icon */
+.callout-content i {
+  color: #ff824d;
+  font-size: 18px;
+}
+
+/* Text */
+.notice {
+  margin: 0;
+  font-size: 14px;
+  text-align: left;
+}
+
+/* Close button (right aligned) */
+.closebtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
+  font-size: 20px;
+  color: #ff974d;
+  cursor: pointer;
+
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+}
+
+.closebtn:hover {
+  background: rgba(255, 166, 77, 0.2);
+  color: white;
+}
+
+
+.footer {
+  position: relative;
+  background: linear-gradient(to right, black, #362018, #360808);
+  color: white;
+  box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.5);
+  padding: 20px 30px;
+  overflow: hidden;
+  display: flex;
+  flex-wrap: wrap; /* allow items to wrap */
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.logo-footer {
+  margin-top: -2px;
+  margin-left: 30px;
+}
+
+/* Footer columns */
+.footer .container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  width: 100%;
+}
+
+.footer .container > div {
+  flex: 1 1 220px; /* grow, shrink, minimum width */
+  box-sizing: border-box;
+  word-wrap: break-word;
+}
+
+/* Contact section */
+.contact {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.contact h3 {
+  text-align: left;
+}
+
+.contact span {
+  font-size: 16px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+}
+
+.contact-item p {
+  margin: 0;
+  word-break: break-word;
+}
+
+.contact-item a:hover {
+  color: #b08b38;
+}
+
+.Address {
+  text-align: left;
+  margin-top: 4px;
+}
+
+.Address p {
+  font-size: 16px;
+}
+
+/* Icons */
+.phone i { color: #00b894; }
+.email i { color: #d44638; }
+.fb i { color: #1877f2; }
+.whapp i { color: #25d366; }
+
+/* Map */
+.googlemap {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  padding: 5px;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  .footer {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .footer .container > div {
+    flex: 1 1 100%;
+  }
+
+  .logo-footer {
+    margin-left: 0;
+    text-align: center;
+  }
+}
+
+.copy-right{
+  width: 100%;
+  height: 30px;
+  background: black;
+  color: white;
+  text-align: center;
+}
+
+.copy-right p{
+  margin: 15px auto;
+}
