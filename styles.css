@@ -251,6 +251,13 @@ th,
 td {
   border: none;
   padding: 8px;
+}
+
+th{
+  text-align: left;
+}
+
+td{
   text-align: center;
 }
 
@@ -436,6 +443,7 @@ th[colspan="2"] {
 .copy-right p{
   margin: 15px auto;
 }
+
 
 
 
