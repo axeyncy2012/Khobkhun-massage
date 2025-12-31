@@ -261,6 +261,10 @@ td{
   text-align: center;
 }
 
+.minute{
+  text-align: left;
+}
+
 /* Optional: section headers */
 th[colspan="2"] {
   font-weight: bold;
@@ -443,6 +447,7 @@ th[colspan="2"] {
 .copy-right p{
   margin: 15px auto;
 }
+
 
 
 
