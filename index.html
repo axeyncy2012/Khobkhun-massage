@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -96,7 +96,9 @@
       <button type="button" id="menuBtn" class="menu-button">Review Menu</button>
       </div>
     <div class="table-div" id="menuTable">
-    
+      <div class="menu-popup" id="menuContent">
+        <img src="Logo-Khobkhun Massage1.png" style="width: 150px; height: 130px; top: 10px;">
+        <button class="close-btn" id="closeMenu">&times;</button>
       <table>
         <tr>
           <th colspan="2">Nek-schouder en rugmassage</th>
@@ -193,6 +195,8 @@
           <td>€ 65</td>
         </tr>
       </table>
+      </div>
+    </div>
     <div style="
   display: flex; justify-content: center; align-items: center; height: 120px;             
 ">
@@ -264,7 +268,7 @@
         </p>
     </div>
     <div class="googlemap">
-<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2388.3481155198174!2d6.556965411971149!3d53.22953578334183!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c9cd4249f7219b%3A0x5d0d37b5d6d52860!2zSm9oYW4gZGUgV2l0dHN0cmFhdCAxLCA5NzE2IENBIEdyb25pbmdlbiwg4LmA4LiZ4LmA4LiY4Lit4Lij4LmM4LmB4Lil4LiZ4LiU4LmM!5e0!3m2!1sth!2ssg!4v1765962568762!5m2!1sth!2ssg" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2388.348115513348!2d6.55697077623906!3d53.2295357834578!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c9cd4249f7219b%3A0x5d0d37b5d6d52860!2sJohan%20de%20Wittstraat%201%2C%209716%20CA%20Groningen%2C%20Niederlande!5e0!3m2!1sde!2sth!4v1767347235198!5m2!1sde!2sth" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
     </div>
 </div>
 </div>
@@ -273,33 +277,44 @@
 </div>
 </body>
 <script>
+document.addEventListener("DOMContentLoaded", () => {
+
   const menuBtn = document.getElementById("menuBtn");
   const menuTable = document.getElementById("menuTable");
+  const menuContent = document.getElementById("menuContent");
+  const closeBtn = document.getElementById("closeMenu");
 
+  function openMenu() {
+    menuTable.style.display = "flex";   // ✅ flex ONLY via JS
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeMenu() {
+    menuTable.style.display = "none";
+    menuBtn.textContent = "Review Menu";
+    document.body.style.overflow = "";
+  }
+
+  // Toggle button
   menuBtn.addEventListener("click", () => {
-    if (menuTable.style.display === "none" || menuTable.style.display === "") {
-      menuTable.style.display = "block";
-      menuBtn.textContent = "Hide Menu";
-    } else {
-      menuTable.style.display = "none";
-      menuBtn.textContent = "Review Menu";
-    }
+    menuTable.style.display === "flex" ? closeMenu() : openMenu();
   });
+
+  // Close X
+  closeBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    closeMenu();
+  });
+
+  // Click outside
+  menuTable.addEventListener("click", closeMenu);
+
+  // Prevent closing when clicking inside popup
+  menuContent.addEventListener("click", (e) => {
+    e.stopPropagation();
+  });
+
+});
 </script>
 
 </html>
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
