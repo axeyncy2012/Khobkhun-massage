@@ -223,52 +223,97 @@ h1{
   border-radius: 20px;
   border: 0.5px solid #b08b38; 
   background-color: black;
-  color:white;
+  color: white;
   cursor: pointer;
   font-size: 20px;
   font-weight: 1000;
-  text-shadow: 2px 2px 4px #000000
+  text-shadow: 2px 2px 4px #000000;
 }
 
-.menu-button:hover{
+.menu-button:hover {
   background-color: #b08b38;
 }
 
-/* Hide table initially */
+/* =========================
+   OVERLAY (FIXED)
+========================= */
 .table-div {
-  display: none;
+  display: none;                 /* ✅ hidden by default */
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+
+  justify-content: center;
+  align-items: center;
 }
 
-/* Table styling */
-/* Table styling */
-table {
-  border-collapse: collapse;
-  width: 100%;
+/* =========================
+   POPUP CONTAINER
+========================= */
+.menu-popup {
+  position: relative;
+  width: 500px;
+  max-width: 95vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  background-color: hsla(0, 0%, 0%, 0.782);
+  color: white;
+  padding: 50px 20px 20px;
+  border-radius: 10px;
 }
 
-/* Cells — no borders at all */
-th,
-td {
+/* Hide scrollbar */
+.menu-popup::-webkit-scrollbar {
+  width: 0;
+}
+.menu-popup {
+  scrollbar-width: none;
+}
+
+/* =========================
+   CLOSE BUTTON
+========================= */
+.close-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: none;
   border: none;
-  padding: 8px;
+  color: rgb(255, 179, 0);
+  font-size: 26px;
+  cursor: pointer;
+  z-index: 10;
 }
 
-th{
+/* =========================
+   TABLE STYLING
+========================= */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-left: 20px;
+}
+
+th, td {
+  padding: 8px;
+  border: none;
+}
+
+th {
   text-align: left;
 }
 
-td{
+td {
   text-align: center;
 }
 
-.minute{
+.minute {
   text-align: left;
 }
 
-/* Optional: section headers */
 th[colspan="2"] {
   font-weight: bold;
-  background-color: transparent;
   font-size: 20px;
 }
 
@@ -447,9 +492,5 @@ th[colspan="2"] {
 .copy-right p{
   margin: 15px auto;
 }
-
-
-
-
 
 
