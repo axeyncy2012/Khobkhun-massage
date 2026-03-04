@@ -331,9 +331,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const menuTable = document.getElementById("menuTable");
   const menuContent = document.getElementById("menuContent");
   const closeBtn = document.getElementById("closeMenu");
+  const hamBtn = document.getElementById("hamBtn");
+  const sideMenu = document.getElementById("sideMenu");
+
+
+  hamBtn.addEventListener("click", () => {
+  hamBtn.classList.toggle("active");
+  sideMenu.classList.toggle("open");
+    });
 
   function openMenu() {
-    menuTable.style.display = "flex";   // ✅ flex ONLY via JS
+    menuTable.style.display = "flex";   
     document.body.style.overflow = "hidden";
   }
 
@@ -364,8 +372,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 </script>
-
 </html>
+
 
 
 
