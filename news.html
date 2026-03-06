@@ -40,52 +40,37 @@ Thaise massage in Hoogezand, Thaise massage, massage therapie">
 </script>
 <style>
 
-*{
-  box-sizing: border-box;
-}
-
 .new-image{
   display:flex;
-  justify-content:center;   /* center horizontally */
   align-items:center;
+  justify-content:center;
   gap:20px;
-  flex-wrap:wrap;
-  margin:auto;
 }
 
 /* image */
 .new-image img{
-  width:100%;
-  max-width:600px;
+  width:600px;
+  max-width:100%;
   height:auto;
-  display:block;
 }
 
-/* map container */
+/* map */
 .map{
-  width:100%;
-  max-width:600px;
-  margin:auto;
+  width:600px;
+  max-width:100%;
 }
 
-/* iframe */
 .map iframe{
   width:100%;
   height:400px;
   border:0;
-  display:block;
 }
 
-/* mobile layout */
+/* mobile */
 @media (max-width:768px){
 
   .new-image{
     flex-direction:column;
-    align-items:center;
-  }
-
-  .map iframe{
-    height:300px;
   }
 
 }
@@ -200,6 +185,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 </html>
+
 
 
 
