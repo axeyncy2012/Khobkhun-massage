@@ -508,9 +508,13 @@ th[colspan="2"] {
 
 .contact-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start; /* key change */
   gap: 8px;
-  max-width: 100%;
+}
+
+.phone-numbers {
+  display: flex;
+  flex-direction: column;
 }
 
 .contact-item p {
@@ -684,5 +688,6 @@ th[colspan="2"] {
   color: rgba(255, 255, 255, 0.8);
   letter-spacing: 2px;
 }
+
 
 
