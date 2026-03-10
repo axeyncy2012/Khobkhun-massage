@@ -41,8 +41,8 @@ Thaise massage in Hoogezand, Thaise massage, massage therapie">
 <style>
 
 .services {
-  max-width: 900px; /* centers content with margin on sides */
-  margin: 30px auto; /* top-bottom 50px, auto for horizontal centering */
+  max-width: 900px;
+  margin: 30px auto;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -54,17 +54,22 @@ Thaise massage in Hoogezand, Thaise massage, massage therapie">
   text-align: center;
   margin-bottom: 30px;
 }
-/* Slider */
+
+/* =========================
+   SLIDER
+========================= */
+
 .slider {
   width: 100%;
   max-width: 1000px;
   margin: 100px auto;
   overflow: hidden;
   position: relative;
-  touch-action: pan-y; /* smooth mobile swipe */
+  touch-action: pan-y;
 }
 
 /* Track */
+
 .slider-track {
   display: flex;
   align-items: center;
@@ -79,78 +84,102 @@ Thaise massage in Hoogezand, Thaise massage, massage therapie">
   transition: none;
 }
 
-/* Cards */
+/* =========================
+   CARDS
+========================= */
+
 .card {
   flex: 0 0 50%;
   margin: 0 25px;
-  padding: 100px 20px;
   box-sizing: border-box;
-  border: none;
+
   background-color: #362018;
   background-image: linear-gradient(black, #362018, #694E37);
-  border-radius: 10px;            
+
+  border-radius: 10px;
   padding: 25px;
   color: #fff;
   text-align: center;
+
   box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+
   transition: transform 0.4s ease, opacity 0.4s ease;
+
   transform: scale(0.8);
-  opacity: 0.4;
+  opacity: 0.6;   /* less dark than before */
+
   font-size: 18px;
-  width:100%;
-  max-width:380px;
-  height:auto;
+
+  width: 100%;
+  max-width: 380px;
 }
-}
+
+/* line under title */
+
 .card-line {
-    width: 50%;
-    border: 0;
-    border-top: 1px solid #b08b38;
-    margin: 15px auto;
+  width: 50%;
+  border: 0;
+  border-top: 1px solid #b08b38;
+  margin: 15px auto;
 }
-/* Active center card */
+
+/* Active card */
+
 .card.active {
   transform: scale(1);
   opacity: 1;
 }
 
+/* card image */
+
 .card img {
-    width: 100%;          /* Fit card width */
-    height: auto;         /* Keep aspect ratio */
-    max-height: 180px;    /* Optional: prevent it from being too tall */
-    object-fit: contain;  /* Ensure full image is visible */
-    margin-bottom: 15px;
-    display: block;
+  width: 100%;
+  height: auto;
+  max-height: 180px;
+  object-fit: contain;
+  margin-bottom: 15px;
+  display: block;
 }
+
+/* =========================
+   MOBILE
+========================= */
+
 @media (max-width:768px){
 
 .slider{
-  height: 420px;          /* fixed viewing area */
+  height: 450px;
   overflow: hidden;
-  display:flex;
-  justify-content:center;
-  align-items:center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .slider-track{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+/* remove dark effect on mobile */
+
 .card{
-  width:90%;
-  max-width:350px;
-  margin:10px 0;
-  transform:scale(0.9);
-  transition:0.3s;
+  width: 90%;
+  max-width: 350px;
+  margin: 10px 0;
+
+  transform: scale(1);
+  opacity: 1;
+
+  transition: transform 0.3s;
 }
 
 .card.active{
-  transform:scale(1);
+  transform: scale(1.05);
 }
 
 }
+
 </style>
 </head>
 <body>
@@ -479,6 +508,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const isMobile = window.innerWidth <= 768;
 
+  /* slide size depending on direction */
+
   function getSlideSize() {
     if (isMobile) {
       return cards[0].offsetHeight + 20;
@@ -486,19 +517,26 @@ document.addEventListener("DOMContentLoaded", () => {
     return cards[0].offsetWidth + 50;
   }
 
-  function centerOffset() {
+  /* center card */
 
+  function centerOffset() {
     if (isMobile) {
       return (slider.offsetHeight - cards[0].offsetHeight) / 2;
     }
-
     return (slider.offsetWidth - cards[0].offsetWidth) / 2;
   }
 
+  /* active card highlight */
+
   function updateActive() {
     cards.forEach(card => card.classList.remove("active"));
-    cards[index].classList.add("active");
+
+    if (cards[index]) {
+      cards[index].classList.add("active");
+    }
   }
+
+  /* move slider */
 
   function moveToIndex(transition = true) {
 
@@ -516,24 +554,31 @@ document.addEventListener("DOMContentLoaded", () => {
     updateActive();
   }
 
+  /* infinite loop reset */
+
   function checkLoop() {
 
-    if (index === 0) {
+    if (index <= 0) {
       index = cards.length - 2;
       moveToIndex(false);
     }
 
-    if (index === cards.length - 1) {
+    if (index >= cards.length - 1) {
       index = 1;
       moveToIndex(false);
     }
 
   }
 
+  /* drag start */
+
   function startDrag(pos) {
     isDragging = true;
     startPos = pos;
+    track.classList.add("dragging");
   }
+
+  /* dragging */
 
   function drag(pos) {
 
@@ -542,20 +587,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const diff = pos - startPos;
 
     if (isMobile) {
-      track.style.transform =
-        `translateY(${prevTranslate + diff}px)`;
+      track.style.transform = `translateY(${prevTranslate + diff}px)`;
     } else {
-      track.style.transform =
-        `translateX(${prevTranslate + diff}px)`;
+      track.style.transform = `translateX(${prevTranslate + diff}px)`;
     }
 
   }
+
+  /* drag end */
 
   function endDrag(pos) {
 
     if (!isDragging) return;
 
     isDragging = false;
+    track.classList.remove("dragging");
 
     const diff = pos - startPos;
 
@@ -568,7 +614,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   }
 
-  /* CLICK CENTER */
+  /* click card to center */
 
   cards.forEach((card, i) => {
 
@@ -586,7 +632,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   });
 
-  /* TOUCH */
+  /* touch events */
 
   track.addEventListener("touchstart", e =>
     startDrag(isMobile ? e.touches[0].clientY : e.touches[0].clientX)
@@ -600,7 +646,7 @@ document.addEventListener("DOMContentLoaded", () => {
     endDrag(isMobile ? e.changedTouches[0].clientY : e.changedTouches[0].clientX)
   );
 
-  /* MOUSE */
+  /* mouse events */
 
   track.addEventListener("mousedown", e =>
     startDrag(isMobile ? e.clientY : e.clientX)
@@ -618,11 +664,17 @@ document.addEventListener("DOMContentLoaded", () => {
     endDrag(isMobile ? e.clientY : e.clientX)
   );
 
+  /* initialize */
+
   moveToIndex(false);
+
+  window.addEventListener("resize", () => moveToIndex(false));
 
 });
 </script>
+
 </html>
+
 
 
 
