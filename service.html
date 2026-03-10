@@ -139,6 +139,16 @@ Thaise massage in Hoogezand, Thaise massage, massage therapie">
 /* Hide clone cards on phone */
 @media (max-width:768px){
 
+  .card{
+opacity: 0.5;
+transform: scale(1);
+}
+
+.card.active{
+opacity: 1;
+transform: scale(1);
+}
+
 .card.clone{
 display:none;
 }
@@ -672,6 +682,7 @@ window.addEventListener("resize", () => {
 
 
 </html>
+
 
 
 
