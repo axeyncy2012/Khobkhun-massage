@@ -139,11 +139,12 @@ Thaise massage in Hoogezand, Thaise massage, massage therapie">
 @media (max-width:768px){
 
 .slider{
-  height:430px;
+height:430px;
+overflow-y:auto;
 }
 
 .slider-track{
-  flex-direction:column;
+flex-direction:column;
 }
 
 .card{
@@ -591,51 +592,47 @@ moveToIndex(false);
 
 else{
 
-let current=1;
+let cardHeight = cards[0].offsetHeight + 24;
 
-function updateActive(){
+/* start at first real card */
 
-cards.forEach(c=>c.classList.remove("active"));
+setTimeout(()=>{
+slider.scrollTop = cardHeight;
+},100);
 
-if(cards[current])
-cards[current].classList.add("active");
+/* infinite scroll */
+
+slider.addEventListener("scroll",()=>{
+
+const scroll = slider.scrollTop;
+
+const maxScroll = cardHeight * (cards.length - 1);
+
+/* if at top clone */
+
+if(scroll <= 0){
+
+slider.scrollTop = cardHeight * (cards.length - 2);
 
 }
 
-updateActive();
+/* if at bottom clone */
 
-slider.addEventListener("touchstart",e=>{
-startY=e.touches[0].clientY;
-});
+if(scroll >= maxScroll){
 
-slider.addEventListener("touchend",e=>{
+slider.scrollTop = cardHeight;
 
-const endY=e.changedTouches[0].clientY;
-
-const diff=endY-startY;
-
-if(diff<-50)current++;
-if(diff>50)current--;
-
-if(current<=0)current=cards.length-2;
-if(current>=cards.length-1)current=1;
-
-cards[current].scrollIntoView({
-behavior:"smooth",
-block:"center"
-});
-
-updateActive();
+}
 
 });
 
 }
 
-});
 </script>
 
 
 </html>
+
 
 
 
