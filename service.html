@@ -40,12 +40,14 @@ Thaise massage in Hoogezand, Thaise massage, massage therapie">
 </script>
 <style>
 
+/* =========================
+   SERVICES SECTION
+========================= */
+
 .services {
   max-width: 900px;
   margin: 30px auto;
   padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .services h2.page-header {
@@ -62,10 +64,9 @@ Thaise massage in Hoogezand, Thaise massage, massage therapie">
 .slider {
   width: 100%;
   max-width: 1000px;
-  margin: 100px auto;
+  margin: 80px auto;
   overflow: hidden;
   position: relative;
-  touch-action: pan-y;
 }
 
 /* Track */
@@ -76,7 +77,6 @@ Thaise massage in Hoogezand, Thaise massage, massage therapie">
   transition: transform 0.4s ease;
   cursor: grab;
   user-select: none;
-  -webkit-user-select: none;
 }
 
 .slider-track.dragging {
@@ -85,52 +85,43 @@ Thaise massage in Hoogezand, Thaise massage, massage therapie">
 }
 
 /* =========================
-   CARDS
+   CARD
 ========================= */
 
 .card {
+
   flex: 0 0 50%;
   margin: 0 25px;
-  box-sizing: border-box;
 
-  background-color: #362018;
-  background-image: linear-gradient(black, #362018, #694E37);
+  max-width: 380px;
+  width: 100%;
+
+  padding: 25px;
 
   border-radius: 10px;
-  padding: 25px;
+
+  background: linear-gradient(black,#362018,#694E37);
+
   color: #fff;
   text-align: center;
 
   box-shadow: 0 25px 50px rgba(0,0,0,0.3);
 
-  transition: transform 0.4s ease, opacity 0.4s ease;
+  transform: scale(0.85);
+  opacity: 0.6;
 
-  transform: scale(0.8);
-  opacity: 0.6;   /* less dark than before */
+  transition: transform .4s ease, opacity .4s ease;
 
-  font-size: 18px;
-
-  width: 100%;
-  max-width: 380px;
 }
 
-/* line under title */
-
-.card-line {
-  width: 50%;
-  border: 0;
-  border-top: 1px solid #b08b38;
-  margin: 15px auto;
-}
-
-/* Active card */
+/* Active center card */
 
 .card.active {
   transform: scale(1);
   opacity: 1;
 }
 
-/* card image */
+/* Card image */
 
 .card img {
   width: 100%;
@@ -138,7 +129,15 @@ Thaise massage in Hoogezand, Thaise massage, massage therapie">
   max-height: 180px;
   object-fit: contain;
   margin-bottom: 15px;
-  display: block;
+}
+
+/* Line */
+
+.card-line {
+  width: 50%;
+  border: 0;
+  border-top: 1px solid #b08b38;
+  margin: 15px auto;
 }
 
 /* =========================
@@ -148,39 +147,42 @@ Thaise massage in Hoogezand, Thaise massage, massage therapie">
 @media (max-width:768px){
 
 .slider{
-  height: 450px;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  height:420px;
+  overflow-y:auto;
+  overflow-x:hidden;
+  display:flex;
+  justify-content:center;
+  align-items:center;
 }
+
+/* vertical track */
 
 .slider-track{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction:column;
+  align-items:center;
 }
 
-/* remove dark effect on mobile */
+/* cards */
 
 .card{
-  width: 90%;
-  max-width: 350px;
-  margin: 10px 0;
+  width:90%;
+  max-width:350px;
+  margin:10px 0;
 
-  transform: scale(1);
-  opacity: 1;
+  transform:scale(.9);
+  opacity:1;
 
-  transition: transform 0.3s;
+  transition:transform .3s ease;
 }
 
 .card.active{
-  transform: scale(1.05);
+  transform:scale(1.05);
 }
 
 }
 
 </style>
+
 </head>
 <body>
   <div class="nav-bar-icon" id="hamBtn">
@@ -478,27 +480,9 @@ Thaise massage in Hoogezand, Thaise massage, massage therapie">
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
-  /* =========================
-     🍔 BURGER MENU
-  ========================== */
-
-  const hamBtn = document.getElementById("hamBtn");
-  const sideMenu = document.getElementById("sideMenu");
-
-  if (hamBtn && sideMenu) {
-    hamBtn.addEventListener("click", () => {
-      hamBtn.classList.toggle("active");
-      sideMenu.classList.toggle("open");
-    });
-  }
-
-  /* =========================
-     🎞 CAROUSEL
-  ========================== */
-
   const slider = document.querySelector(".slider");
   const track = document.querySelector(".slider-track");
-  const cards = document.querySelectorAll(".card");
+  let cards = document.querySelectorAll(".card");
 
   let index = 1;
   let startPos = 0;
@@ -508,53 +492,67 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const isMobile = window.innerWidth <= 768;
 
-  /* slide size depending on direction */
+  /* =========================
+     MOBILE MODE (VERTICAL)
+  ========================== */
 
-  function getSlideSize() {
-    if (isMobile) {
-      return cards[0].offsetHeight + 20;
-    }
+  if (isMobile) {
+
+    slider.style.overflowY = "auto";
+    slider.style.scrollSnapType = "y mandatory";
+
+    cards.forEach(card => {
+      card.style.scrollSnapAlign = "center";
+    });
+
+    slider.addEventListener("scroll", () => {
+
+      const cardHeight = cards[0].offsetHeight + 20;
+      const scrollPos = slider.scrollTop;
+
+      index = Math.round(scrollPos / cardHeight);
+
+      if (index <= 0) {
+        slider.scrollTop = (cards.length - 2) * cardHeight;
+      }
+
+      if (index >= cards.length - 1) {
+        slider.scrollTop = cardHeight;
+      }
+
+    });
+
+    return;
+  }
+
+  /* =========================
+     DESKTOP MODE
+  ========================== */
+
+  function getSlideWidth() {
     return cards[0].offsetWidth + 50;
   }
 
-  /* center card */
-
   function centerOffset() {
-    if (isMobile) {
-      return (slider.offsetHeight - cards[0].offsetHeight) / 2;
-    }
     return (slider.offsetWidth - cards[0].offsetWidth) / 2;
   }
 
-  /* active card highlight */
-
   function updateActive() {
     cards.forEach(card => card.classList.remove("active"));
-
-    if (cards[index]) {
-      cards[index].classList.add("active");
-    }
+    cards[index].classList.add("active");
   }
-
-  /* move slider */
 
   function moveToIndex(transition = true) {
 
-    track.style.transition = transition ? "transform 0.4s ease" : "none";
+    track.style.transition = transition ? "transform .4s ease" : "none";
 
-    currentTranslate = -index * getSlideSize() + centerOffset();
+    currentTranslate = -index * getSlideWidth() + centerOffset();
     prevTranslate = currentTranslate;
 
-    if (isMobile) {
-      track.style.transform = `translateY(${currentTranslate}px)`;
-    } else {
-      track.style.transform = `translateX(${currentTranslate}px)`;
-    }
+    track.style.transform = `translateX(${currentTranslate}px)`;
 
     updateActive();
   }
-
-  /* infinite loop reset */
 
   function checkLoop() {
 
@@ -570,40 +568,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
   }
 
-  /* drag start */
-
-  function startDrag(pos) {
+  function startDrag(x) {
     isDragging = true;
-    startPos = pos;
-    track.classList.add("dragging");
+    startPos = x;
   }
 
-  /* dragging */
-
-  function drag(pos) {
+  function drag(x) {
 
     if (!isDragging) return;
 
-    const diff = pos - startPos;
+    const diff = x - startPos;
 
-    if (isMobile) {
-      track.style.transform = `translateY(${prevTranslate + diff}px)`;
-    } else {
-      track.style.transform = `translateX(${prevTranslate + diff}px)`;
-    }
+    track.style.transform =
+      `translateX(${prevTranslate + diff}px)`;
 
   }
 
-  /* drag end */
-
-  function endDrag(pos) {
+  function endDrag(x) {
 
     if (!isDragging) return;
 
     isDragging = false;
-    track.classList.remove("dragging");
 
-    const diff = pos - startPos;
+    const diff = x - startPos;
 
     if (diff < -60) index++;
     if (diff > 60) index--;
@@ -614,66 +601,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
   }
 
-  /* click card to center */
+  track.addEventListener("mousedown", e => startDrag(e.clientX));
+  track.addEventListener("mousemove", e => drag(e.clientX));
+  track.addEventListener("mouseup", e => endDrag(e.clientX));
+  track.addEventListener("mouseleave", e => endDrag(e.clientX));
 
-  cards.forEach((card, i) => {
-
-    card.addEventListener("click", () => {
-
-      if (isDragging) return;
-
-      index = i;
-
-      moveToIndex();
-
-      setTimeout(checkLoop, 400);
-
-    });
-
-  });
-
-  /* touch events */
-
-  track.addEventListener("touchstart", e =>
-    startDrag(isMobile ? e.touches[0].clientY : e.touches[0].clientX)
-  );
-
-  track.addEventListener("touchmove", e =>
-    drag(isMobile ? e.touches[0].clientY : e.touches[0].clientX)
-  );
-
-  track.addEventListener("touchend", e =>
-    endDrag(isMobile ? e.changedTouches[0].clientY : e.changedTouches[0].clientX)
-  );
-
-  /* mouse events */
-
-  track.addEventListener("mousedown", e =>
-    startDrag(isMobile ? e.clientY : e.clientX)
-  );
-
-  track.addEventListener("mousemove", e =>
-    drag(isMobile ? e.clientY : e.clientX)
-  );
-
-  track.addEventListener("mouseup", e =>
-    endDrag(isMobile ? e.clientY : e.clientX)
-  );
-
-  track.addEventListener("mouseleave", e =>
-    endDrag(isMobile ? e.clientY : e.clientX)
-  );
-
-  /* initialize */
+  track.addEventListener("touchstart", e => startDrag(e.touches[0].clientX));
+  track.addEventListener("touchmove", e => drag(e.touches[0].clientX));
+  track.addEventListener("touchend", e => endDrag(e.changedTouches[0].clientX));
 
   moveToIndex(false);
-
-  window.addEventListener("resize", () => moveToIndex(false));
 
 });
 </script>
 
 </html>
+
 
 
 
