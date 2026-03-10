@@ -38,152 +38,129 @@ Thaise massage in Hoogezand, Thaise massage, massage therapie">
   ]
 }
 </script>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-
-const slider = document.querySelector(".slider");
-const track = document.querySelector(".slider-track");
-const cards = document.querySelectorAll(".card");
-
-let index = 1;
-let startX = 0;
-let isDragging = false;
-let currentTranslate = 0;
-let prevTranslate = 0;
-
-const isMobile = window.innerWidth <= 768;
+<style>
 
 /* =========================
-   MOBILE (VERTICAL SCROLL)
+   SECTION
 ========================= */
 
-if (isMobile){
+.services{
+  max-width:900px;
+  margin:30px auto;
+  padding:20px;
+}
 
-slider.style.overflowY = "auto";
-
-return;
+.services h2.page-header{
+  font-family:'Cinzel',serif;
+  font-size:32px;
+  text-align:center;
+  margin-bottom:30px;
 }
 
 /* =========================
-   DESKTOP CAROUSEL
+   SLIDER
 ========================= */
 
-function getSlideWidth(){
-  return cards[0].offsetWidth + 50;
+.slider{
+  width:100%;
+  max-width:1000px;
+  margin:80px auto;
+  overflow:hidden;
+  position:relative;
 }
 
-function centerOffset(){
-  return (slider.offsetWidth - cards[0].offsetWidth) / 2;
+/* Track */
+
+.slider-track{
+  display:flex;
+  align-items:center;
+  transition:transform .4s ease;
+  cursor:grab;
 }
 
-function updateActive(){
-  cards.forEach(card => card.classList.remove("active"));
-  if(cards[index]) cards[index].classList.add("active");
-}
-
-function moveToIndex(transition=true){
-
-track.style.transition = transition ? "transform .4s ease" : "none";
-
-currentTranslate = -index * getSlideWidth() + centerOffset();
-prevTranslate = currentTranslate;
-
-track.style.transform = `translateX(${currentTranslate}px)`;
-
-updateActive();
-
-}
-
-function checkLoop(){
-
-if(index <= 0){
-  index = cards.length - 2;
-  moveToIndex(false);
-}
-
-if(index >= cards.length - 1){
-  index = 1;
-  moveToIndex(false);
-}
-
+.slider-track.dragging{
+  cursor:grabbing;
+  transition:none;
 }
 
 /* =========================
-   CLICK CARD
+   CARD
 ========================= */
 
-cards.forEach((card,i)=>{
+.card{
 
-card.addEventListener("click",()=>{
+  flex:0 0 50%;
+  margin:0 25px;
 
-if(isDragging) return;
+  max-width:380px;
+  width:100%;
 
-index = i;
+  padding:25px;
+  border-radius:10px;
 
-moveToIndex();
+  background:linear-gradient(black,#362018,#694E37);
 
-setTimeout(checkLoop,400);
+  color:white;
+  text-align:center;
 
-});
+  box-shadow:0 20px 40px rgba(0,0,0,.3);
 
-});
+  transform:scale(.85);
+  opacity:.5;
+
+  transition:transform .4s ease, opacity .4s ease;
+
+}
+
+.card.active{
+  transform:scale(1);
+  opacity:1;
+}
+
+.card img{
+  width:100%;
+  height:auto;
+  max-height:180px;
+  object-fit:contain;
+  margin-bottom:15px;
+}
+
+.card-line{
+  width:50%;
+  border:0;
+  border-top:1px solid #b08b38;
+  margin:15px auto;
+}
 
 /* =========================
-   DRAG
+   MOBILE
 ========================= */
 
-function startDrag(x){
-isDragging = true;
-startX = x;
+@media (max-width:768px){
+
+.slider{
+  height:430px;
 }
 
-function drag(x){
-
-if(!isDragging) return;
-
-const diff = x - startX;
-
-track.style.transform =
-`translateX(${prevTranslate + diff}px)`;
-
+.slider-track{
+  flex-direction:column;
 }
 
-function endDrag(x){
+.card{
+  width:90%;
+  max-width:350px;
+  margin:12px auto;
+  transform:scale(.95);
+  opacity:1;
+}
 
-if(!isDragging) return;
-
-isDragging = false;
-
-const diff = x - startX;
-
-if(diff < -60) index++;
-if(diff > 60) index--;
-
-moveToIndex();
-
-setTimeout(checkLoop,400);
+.card.active{
+  transform:scale(1.05);
+}
 
 }
 
-/* mouse */
-
-track.addEventListener("mousedown",e=>startDrag(e.clientX));
-track.addEventListener("mousemove",e=>drag(e.clientX));
-track.addEventListener("mouseup",e=>endDrag(e.clientX));
-track.addEventListener("mouseleave",e=>endDrag(e.clientX));
-
-/* touch */
-
-track.addEventListener("touchstart",e=>startDrag(e.touches[0].clientX));
-track.addEventListener("touchmove",e=>drag(e.touches[0].clientX));
-track.addEventListener("touchend",e=>endDrag(e.changedTouches[0].clientX));
-
-moveToIndex(false);
-
-window.addEventListener("resize",()=>moveToIndex(false));
-
-});
-</script>
+</style>
 
 
 </head>
@@ -481,133 +458,185 @@ window.addEventListener("resize",()=>moveToIndex(false));
 </div>
 </body>
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded",()=>{
 
-  const slider = document.querySelector(".slider");
-  const track = document.querySelector(".slider-track");
-  let cards = document.querySelectorAll(".card");
+const slider=document.querySelector(".slider");
+const track=document.querySelector(".slider-track");
+const cards=document.querySelectorAll(".card");
 
-  let index = 1;
-  let startPos = 0;
-  let isDragging = false;
-  let currentTranslate = 0;
-  let prevTranslate = 0;
+let index=1;
+let startX=0;
+let startY=0;
+let isDragging=false;
 
-  const isMobile = window.innerWidth <= 768;
+const isMobile=window.innerWidth<=768;
 
-  /* =========================
-     MOBILE MODE (VERTICAL)
-  ========================== */
+/* =========================
+   DESKTOP HORIZONTAL
+========================= */
 
- if (isMobile){
+if(!isMobile){
 
-slider.style.overflowY = "auto";
+let currentTranslate=0;
+let prevTranslate=0;
 
-/* start at first real card */
-setTimeout(()=>{
-
-const firstCard = cards[1];
-
-if(firstCard){
-slider.scrollTop = firstCard.offsetTop;
+function slideWidth(){
+return cards[0].offsetWidth+50;
 }
 
-},100);
-
-return;
+function centerOffset(){
+return (slider.offsetWidth-cards[0].offsetWidth)/2;
 }
 
-  /* =========================
-     DESKTOP MODE
-  ========================== */
+function updateActive(){
 
-  function getSlideWidth() {
-    return cards[0].offsetWidth + 50;
-  }
+cards.forEach(c=>c.classList.remove("active"));
 
-  function centerOffset() {
-    return (slider.offsetWidth - cards[0].offsetWidth) / 2;
-  }
+if(cards[index])
+cards[index].classList.add("active");
 
-  function updateActive() {
-    cards.forEach(card => card.classList.remove("active"));
-    cards[index].classList.add("active");
-  }
+}
 
-  function moveToIndex(transition = true) {
+function moveToIndex(transition=true){
 
-    track.style.transition = transition ? "transform .4s ease" : "none";
+track.style.transition=transition?"transform .4s ease":"none";
 
-    currentTranslate = -index * getSlideWidth() + centerOffset();
-    prevTranslate = currentTranslate;
+currentTranslate=-(index*slideWidth())+centerOffset();
+prevTranslate=currentTranslate;
 
-    track.style.transform = `translateX(${currentTranslate}px)`;
+track.style.transform=`translateX(${currentTranslate}px)`;
 
-    updateActive();
-  }
+updateActive();
 
-  function checkLoop() {
+}
 
-    if (index <= 0) {
-      index = cards.length - 2;
-      moveToIndex(false);
-    }
+function checkLoop(){
 
-    if (index >= cards.length - 1) {
-      index = 1;
-      moveToIndex(false);
-    }
+if(index<=0){
+index=cards.length-2;
+moveToIndex(false);
+}
 
-  }
+if(index>=cards.length-1){
+index=1;
+moveToIndex(false);
+}
 
-  function startDrag(x) {
-    isDragging = true;
-    startPos = x;
-  }
+}
 
-  function drag(x) {
+cards.forEach((card,i)=>{
 
-    if (!isDragging) return;
+card.addEventListener("click",()=>{
 
-    const diff = x - startPos;
+index=i;
 
-    track.style.transform =
-      `translateX(${prevTranslate + diff}px)`;
+moveToIndex();
 
-  }
+setTimeout(checkLoop,400);
 
-  function endDrag(x) {
+});
 
-    if (!isDragging) return;
+});
 
-    isDragging = false;
+/* drag */
 
-    const diff = x - startPos;
+function startDrag(x){
+isDragging=true;
+startX=x;
+}
 
-    if (diff < -60) index++;
-    if (diff > 60) index--;
+function drag(x){
 
-    moveToIndex();
+if(!isDragging)return;
 
-    setTimeout(checkLoop, 400);
+const diff=x-startX;
 
-  }
+track.style.transform=`translateX(${prevTranslate+diff}px)`;
 
-  track.addEventListener("mousedown", e => startDrag(e.clientX));
-  track.addEventListener("mousemove", e => drag(e.clientX));
-  track.addEventListener("mouseup", e => endDrag(e.clientX));
-  track.addEventListener("mouseleave", e => endDrag(e.clientX));
+}
 
-  track.addEventListener("touchstart", e => startDrag(e.touches[0].clientX));
-  track.addEventListener("touchmove", e => drag(e.touches[0].clientX));
-  track.addEventListener("touchend", e => endDrag(e.changedTouches[0].clientX));
+function endDrag(x){
 
-  moveToIndex(false);
+if(!isDragging)return;
+
+isDragging=false;
+
+const diff=x-startX;
+
+if(diff<-60)index++;
+if(diff>60)index--;
+
+moveToIndex();
+
+setTimeout(checkLoop,400);
+
+}
+
+track.addEventListener("mousedown",e=>startDrag(e.clientX));
+track.addEventListener("mousemove",e=>drag(e.clientX));
+track.addEventListener("mouseup",e=>endDrag(e.clientX));
+track.addEventListener("mouseleave",e=>endDrag(e.clientX));
+
+track.addEventListener("touchstart",e=>startDrag(e.touches[0].clientX));
+track.addEventListener("touchmove",e=>drag(e.touches[0].clientX));
+track.addEventListener("touchend",e=>endDrag(e.changedTouches[0].clientX));
+
+moveToIndex(false);
+
+}
+
+/* =========================
+   MOBILE VERTICAL
+========================= */
+
+else{
+
+let current=1;
+
+function updateActive(){
+
+cards.forEach(c=>c.classList.remove("active"));
+
+if(cards[current])
+cards[current].classList.add("active");
+
+}
+
+updateActive();
+
+slider.addEventListener("touchstart",e=>{
+startY=e.touches[0].clientY;
+});
+
+slider.addEventListener("touchend",e=>{
+
+const endY=e.changedTouches[0].clientY;
+
+const diff=endY-startY;
+
+if(diff<-50)current++;
+if(diff>50)current--;
+
+if(current<=0)current=cards.length-2;
+if(current>=cards.length-1)current=1;
+
+cards[current].scrollIntoView({
+behavior:"smooth",
+block:"center"
+});
+
+updateActive();
+
+});
+
+}
 
 });
 </script>
 
+
 </html>
+
 
 
 
