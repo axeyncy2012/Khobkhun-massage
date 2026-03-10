@@ -136,27 +136,22 @@ Thaise massage in Hoogezand, Thaise massage, massage therapie">
    MOBILE
 ========================= */
 
+/* Hide clone cards on phone */
 @media (max-width:768px){
+
+.card.clone{
+display:none;
+}
 
 .slider{
 height:430px;
 overflow-y:auto;
+overflow-x:hidden;
 }
 
 .slider-track{
 flex-direction:column;
-}
-
-.card{
-  width:90%;
-  max-width:350px;
-  margin:12px auto;
-  transform:scale(.95);
-  opacity:1;
-}
-
-.card.active{
-  transform:scale(1.05);
+align-items:center;
 }
 
 }
@@ -188,7 +183,7 @@ flex-direction:column;
   <div class="slider-track">
 
     <!-- Clone Last -->
-        <div class="card">    
+        <div class="card clone">    
         <h3>Voet massage (+ Scrub Spa € 35)</h3>
         <img src="images (1).jpg">
             <hr class="card-line">
@@ -363,7 +358,7 @@ flex-direction:column;
         </table>
     </div>
     <!-- Clone First -->
-    <div class="card">    
+    <div class="card clone">    
         <h3 style="margin-bottom: 10px;">Nek-schouder en rug massage</h3>
         <img src="back-neck-shoulder-thai-massage.jpg">
             <hr class="card-line">
@@ -459,179 +454,225 @@ flex-direction:column;
 </div>
 </body>
 <script>
-document.addEventListener("DOMContentLoaded",()=>{
-
-const slider=document.querySelector(".slider");
-const track=document.querySelector(".slider-track");
-const cards=document.querySelectorAll(".card");
-
-let index=1;
-let startX=0;
-let startY=0;
-let isDragging=false;
-
-const isMobile=window.innerWidth<=768;
+document.addEventListener("DOMContentLoaded", () => {
 
 /* =========================
-   DESKTOP HORIZONTAL
+   🍔 BURGER MENU
 ========================= */
 
-if(!isMobile){
+const hamBtn = document.getElementById("hamBtn");
+const sideMenu = document.getElementById("sideMenu");
 
-let currentTranslate=0;
-let prevTranslate=0;
+if (hamBtn && sideMenu) {
 
-function slideWidth(){
-return cards[0].offsetWidth+50;
-}
+  hamBtn.addEventListener("click", () => {
 
-function centerOffset(){
-return (slider.offsetWidth-cards[0].offsetWidth)/2;
-}
+    hamBtn.classList.toggle("active");
+    sideMenu.classList.toggle("open");
 
-function updateActive(){
-
-cards.forEach(c=>c.classList.remove("active"));
-
-if(cards[index])
-cards[index].classList.add("active");
+  });
 
 }
 
-function moveToIndex(transition=true){
-
-track.style.transition=transition?"transform .4s ease":"none";
-
-currentTranslate=-(index*slideWidth())+centerOffset();
-prevTranslate=currentTranslate;
-
-track.style.transform=`translateX(${currentTranslate}px)`;
-
-updateActive();
-
-}
-
-function checkLoop(){
-
-if(index<=0){
-index=cards.length-2;
-moveToIndex(false);
-}
-
-if(index>=cards.length-1){
-index=1;
-moveToIndex(false);
-}
-
-}
-
-cards.forEach((card,i)=>{
-
-card.addEventListener("click",()=>{
-
-index=i;
-
-moveToIndex();
-
-setTimeout(checkLoop,400);
-
-});
-
-});
-
-/* drag */
-
-function startDrag(x){
-isDragging=true;
-startX=x;
-}
-
-function drag(x){
-
-if(!isDragging)return;
-
-const diff=x-startX;
-
-track.style.transform=`translateX(${prevTranslate+diff}px)`;
-
-}
-
-function endDrag(x){
-
-if(!isDragging)return;
-
-isDragging=false;
-
-const diff=x-startX;
-
-if(diff<-60)index++;
-if(diff>60)index--;
-
-moveToIndex();
-
-setTimeout(checkLoop,400);
-
-}
-
-track.addEventListener("mousedown",e=>startDrag(e.clientX));
-track.addEventListener("mousemove",e=>drag(e.clientX));
-track.addEventListener("mouseup",e=>endDrag(e.clientX));
-track.addEventListener("mouseleave",e=>endDrag(e.clientX));
-
-track.addEventListener("touchstart",e=>startDrag(e.touches[0].clientX));
-track.addEventListener("touchmove",e=>drag(e.touches[0].clientX));
-track.addEventListener("touchend",e=>endDrag(e.changedTouches[0].clientX));
-
-moveToIndex(false);
-
-}
 
 /* =========================
-   MOBILE VERTICAL
+   🎞 CAROUSEL
 ========================= */
 
-else{
+const slider = document.querySelector(".slider");
+const track = document.querySelector(".slider-track");
+const cards = document.querySelectorAll(".card");
 
-let cardHeight = cards[0].offsetHeight + 24;
+if (!slider || !track || cards.length === 0) return;
 
-/* start at first real card */
+/* stop carousel logic on phone */
 
-setTimeout(()=>{
-slider.scrollTop = cardHeight;
-},100);
+if (window.innerWidth <= 768) {
+  return;
+}
 
-/* infinite scroll */
 
-slider.addEventListener("scroll",()=>{
+/* DESKTOP SLIDER */
 
-const scroll = slider.scrollTop;
+let index = 1;
+let startX = 0;
+let isDragging = false;
+let currentTranslate = 0;
+let prevTranslate = 0;
 
-const maxScroll = cardHeight * (cards.length - 1);
 
-/* if at top clone */
+/* slide size */
 
-if(scroll <= 0){
+function getSlideWidth() {
+  return cards[0].offsetWidth + 50;
+}
 
-slider.scrollTop = cardHeight * (cards.length - 2);
+
+/* center offset */
+
+function centerOffset() {
+  return (slider.offsetWidth - cards[0].offsetWidth) / 2;
+}
+
+
+/* active card */
+
+function updateActive() {
+
+  cards.forEach(card => card.classList.remove("active"));
+
+  if (cards[index]) {
+    cards[index].classList.add("active");
+  }
 
 }
 
-/* if at bottom clone */
 
-if(scroll >= maxScroll){
+/* move slider */
 
-slider.scrollTop = cardHeight;
+function moveToIndex(transition = true) {
+
+  track.style.transition = transition
+    ? "transform 0.4s ease"
+    : "none";
+
+  currentTranslate = -index * getSlideWidth() + centerOffset();
+
+  prevTranslate = currentTranslate;
+
+  track.style.transform = `translateX(${currentTranslate}px)`;
+
+  updateActive();
 
 }
+
+
+/* infinite loop */
+
+function checkLoop() {
+
+  if (index <= 0) {
+
+    index = cards.length - 2;
+    moveToIndex(false);
+
+  }
+
+  if (index >= cards.length - 1) {
+
+    index = 1;
+    moveToIndex(false);
+
+  }
+
+}
+
+
+/* click card to center */
+
+cards.forEach((card, i) => {
+
+  card.addEventListener("click", () => {
+
+    if (isDragging) return;
+
+    index = i;
+
+    moveToIndex();
+
+    setTimeout(checkLoop, 400);
+
+  });
 
 });
 
+
+/* =========================
+   DRAG EVENTS
+========================= */
+
+function startDrag(x) {
+
+  isDragging = true;
+  startX = x;
+
+  track.classList.add("dragging");
+
 }
 
+function drag(x) {
+
+  if (!isDragging) return;
+
+  const diff = x - startX;
+
+  track.style.transform =
+    `translateX(${prevTranslate + diff}px)`;
+
+}
+
+function endDrag(x) {
+
+  if (!isDragging) return;
+
+  isDragging = false;
+
+  track.classList.remove("dragging");
+
+  const diff = x - startX;
+
+  if (diff < -60) index++;
+  if (diff > 60) index--;
+
+  moveToIndex();
+
+  setTimeout(checkLoop, 400);
+
+}
+
+
+/* mouse */
+
+track.addEventListener("mousedown", e => startDrag(e.clientX));
+track.addEventListener("mousemove", e => drag(e.clientX));
+track.addEventListener("mouseup", e => endDrag(e.clientX));
+track.addEventListener("mouseleave", e => endDrag(e.clientX));
+
+
+/* touch */
+
+track.addEventListener("touchstart", e =>
+  startDrag(e.touches[0].clientX)
+);
+
+track.addEventListener("touchmove", e =>
+  drag(e.touches[0].clientX)
+);
+
+track.addEventListener("touchend", e =>
+  endDrag(e.changedTouches[0].clientX)
+);
+
+
+/* initialize slider */
+
+moveToIndex(false);
+
+
+/* recenter on resize */
+
+window.addEventListener("resize", () => {
+
+  moveToIndex(false);
+
+});
+
+});
 </script>
 
 
 </html>
+
 
 
 
