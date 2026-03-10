@@ -38,150 +38,153 @@ Thaise massage in Hoogezand, Thaise massage, massage therapie">
   ]
 }
 </script>
-<style>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+const slider = document.querySelector(".slider");
+const track = document.querySelector(".slider-track");
+const cards = document.querySelectorAll(".card");
+
+let index = 1;
+let startX = 0;
+let isDragging = false;
+let currentTranslate = 0;
+let prevTranslate = 0;
+
+const isMobile = window.innerWidth <= 768;
 
 /* =========================
-   SERVICES SECTION
+   MOBILE (VERTICAL SCROLL)
 ========================= */
 
-.services {
-  max-width: 900px;
-  margin: 30px auto;
-  padding: 20px;
-}
+if (isMobile){
 
-.services h2.page-header {
-  font-family: 'Cinzel', serif;
-  font-size: 32px;
-  text-align: center;
-  margin-bottom: 30px;
-}
+slider.style.overflowY = "auto";
 
-/* =========================
-   SLIDER
-========================= */
-
-.slider {
-  width: 100%;
-  max-width: 1000px;
-  margin: 80px auto;
-  overflow: hidden;
-  position: relative;
-}
-
-/* Track */
-
-.slider-track {
-  display: flex;
-  align-items: center;
-  transition: transform 0.4s ease;
-  cursor: grab;
-  user-select: none;
-}
-
-.slider-track.dragging {
-  cursor: grabbing;
-  transition: none;
+return;
 }
 
 /* =========================
-   CARD
+   DESKTOP CAROUSEL
 ========================= */
 
-.card {
+function getSlideWidth(){
+  return cards[0].offsetWidth + 50;
+}
 
-  flex: 0 0 50%;
-  margin: 0 25px;
+function centerOffset(){
+  return (slider.offsetWidth - cards[0].offsetWidth) / 2;
+}
 
-  max-width: 380px;
-  width: 100%;
+function updateActive(){
+  cards.forEach(card => card.classList.remove("active"));
+  if(cards[index]) cards[index].classList.add("active");
+}
 
-  padding: 25px;
+function moveToIndex(transition=true){
 
-  border-radius: 10px;
+track.style.transition = transition ? "transform .4s ease" : "none";
 
-  background: linear-gradient(black,#362018,#694E37);
+currentTranslate = -index * getSlideWidth() + centerOffset();
+prevTranslate = currentTranslate;
 
-  color: #fff;
-  text-align: center;
+track.style.transform = `translateX(${currentTranslate}px)`;
 
-  box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-
-  transform: scale(0.85);
-  opacity: 0.6;
-
-  transition: transform .4s ease, opacity .4s ease;
+updateActive();
 
 }
 
-/* Active center card */
+function checkLoop(){
 
-.card.active {
-  transform: scale(1);
-  opacity: 1;
+if(index <= 0){
+  index = cards.length - 2;
+  moveToIndex(false);
 }
 
-/* Card image */
-
-.card img {
-  width: 100%;
-  height: auto;
-  max-height: 180px;
-  object-fit: contain;
-  margin-bottom: 15px;
+if(index >= cards.length - 1){
+  index = 1;
+  moveToIndex(false);
 }
 
-/* Line */
-
-.card-line {
-  width: 50%;
-  border: 0;
-  border-top: 1px solid #b08b38;
-  margin: 15px auto;
 }
 
 /* =========================
-   MOBILE
+   CLICK CARD
 ========================= */
 
-@media (max-width:768px){
+cards.forEach((card,i)=>{
 
-.slider{
-  height:420px;
-  overflow-y:auto;
-  overflow-x:hidden;
-  display:flex;
-  justify-content:center;
-  align-items:center;
+card.addEventListener("click",()=>{
+
+if(isDragging) return;
+
+index = i;
+
+moveToIndex();
+
+setTimeout(checkLoop,400);
+
+});
+
+});
+
+/* =========================
+   DRAG
+========================= */
+
+function startDrag(x){
+isDragging = true;
+startX = x;
 }
 
-/* vertical track */
+function drag(x){
 
-.slider-track{
-  flex-direction:column;
-  align-items:center;
-}
+if(!isDragging) return;
 
-/* cards */
+const diff = x - startX;
 
-.card{
-  width:90%;
-  max-width:350px;
-  margin:10px 0;
-
-  transform:scale(.9);
-  opacity:1;
-
-  transition:transform .3s ease;
-}
-
-.card.active{
-  transform:scale(1.05);
-}
+track.style.transform =
+`translateX(${prevTranslate + diff}px)`;
 
 }
 
-</style>
+function endDrag(x){
+
+if(!isDragging) return;
+
+isDragging = false;
+
+const diff = x - startX;
+
+if(diff < -60) index++;
+if(diff > 60) index--;
+
+moveToIndex();
+
+setTimeout(checkLoop,400);
+
+}
+
+/* mouse */
+
+track.addEventListener("mousedown",e=>startDrag(e.clientX));
+track.addEventListener("mousemove",e=>drag(e.clientX));
+track.addEventListener("mouseup",e=>endDrag(e.clientX));
+track.addEventListener("mouseleave",e=>endDrag(e.clientX));
+
+/* touch */
+
+track.addEventListener("touchstart",e=>startDrag(e.touches[0].clientX));
+track.addEventListener("touchmove",e=>drag(e.touches[0].clientX));
+track.addEventListener("touchend",e=>endDrag(e.changedTouches[0].clientX));
+
+moveToIndex(false);
+
+window.addEventListener("resize",()=>moveToIndex(false));
+
+});
+</script>
+
 
 </head>
 <body>
@@ -496,34 +499,23 @@ document.addEventListener("DOMContentLoaded", () => {
      MOBILE MODE (VERTICAL)
   ========================== */
 
-  if (isMobile) {
+ if (isMobile){
 
-    slider.style.overflowY = "auto";
-    slider.style.scrollSnapType = "y mandatory";
+slider.style.overflowY = "auto";
 
-    cards.forEach(card => {
-      card.style.scrollSnapAlign = "center";
-    });
+/* start at first real card */
+setTimeout(()=>{
 
-    slider.addEventListener("scroll", () => {
+const firstCard = cards[1];
 
-      const cardHeight = cards[0].offsetHeight + 20;
-      const scrollPos = slider.scrollTop;
+if(firstCard){
+slider.scrollTop = firstCard.offsetTop;
+}
 
-      index = Math.round(scrollPos / cardHeight);
+},100);
 
-      if (index <= 0) {
-        slider.scrollTop = (cards.length - 2) * cardHeight;
-      }
-
-      if (index >= cards.length - 1) {
-        slider.scrollTop = cardHeight;
-      }
-
-    });
-
-    return;
-  }
+return;
+}
 
   /* =========================
      DESKTOP MODE
@@ -616,6 +608,7 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 
 </html>
+
 
 
 
