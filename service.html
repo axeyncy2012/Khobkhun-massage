@@ -121,22 +121,23 @@ Thaise massage in Hoogezand, Thaise massage, massage therapie">
 }
 @media (max-width:768px){
 
-  .slider{
-    overflow: visible;
-  }
+.slider-track{
+  transform:none !important;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:20px;
+}
 
-  .slider-track{
-    transform: none !important;
-    display: flex;
-    flex-direction: column; /* stack cards */
-    align-items: center;
-    gap: 20px;
-  }
+.card{
+  width:90%;
+  max-width:380px;
+}
 
-  .card{
-    width: 90%;
-    max-width: 400px;
-  }
+.card.active{
+  transform:none;
+  filter:none;
+}
 
 }
 </style>
@@ -457,12 +458,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const slider = document.querySelector(".slider");
   const track = document.querySelector(".slider-track");
-  const cards = document.querySelectorAll(".card");
+  let cards = document.querySelectorAll(".card");
 
-  /* Disable infinite carousel on mobile */
+  /* 📱 MOBILE MODE */
   if (window.innerWidth <= 768) {
-    return;
+
+    track.style.transform = "none";
+    track.style.transition = "none";
+
+    cards.forEach(card => {
+      card.classList.remove("active");   // remove dark effect
+    });
+
+    return; // stop carousel script
   }
+
+  /* 💻 DESKTOP MODE */
 
   let index = 1;
   let startX = 0;
@@ -480,22 +491,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateActive() {
     cards.forEach(card => card.classList.remove("active"));
-    if (cards[index]) {
-      cards[index].classList.add("active");
-    }
+    cards[index].classList.add("active");
   }
 
   function moveToIndex(transition = true) {
+
     track.style.transition = transition ? "transform 0.4s ease" : "none";
 
     currentTranslate = -index * getSlideWidth() + centerOffset();
     prevTranslate = currentTranslate;
 
     track.style.transform = `translateX(${currentTranslate}px)`;
+
     updateActive();
   }
 
   function checkLoop() {
+
     if (index === 0) {
       index = cards.length - 2;
       moveToIndex(false);
@@ -505,6 +517,7 @@ document.addEventListener("DOMContentLoaded", () => {
       index = 1;
       moveToIndex(false);
     }
+
   }
 
   function startDrag(x) {
@@ -515,11 +528,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function drag(x) {
     if (!isDragging) return;
+
     const diff = x - startX;
-    track.style.transform = `translateX(${prevTranslate + diff}px)`;
+
+    track.style.transform =
+      `translateX(${prevTranslate + diff}px)`;
   }
 
   function endDrag(x) {
+
     if (!isDragging) return;
 
     isDragging = false;
@@ -531,35 +548,52 @@ document.addEventListener("DOMContentLoaded", () => {
     if (diff > 60) index--;
 
     moveToIndex();
+
     setTimeout(checkLoop, 400);
   }
 
-  /* =========================
-     CLICK TO CENTER
-  ========================== */
+  /* CLICK TO CENTER */
 
   cards.forEach((card, i) => {
+
     card.addEventListener("click", () => {
 
       if (isDragging) return;
 
       index = i;
+
       moveToIndex();
+
       setTimeout(checkLoop, 400);
 
     });
+
   });
 
-  /* Touch events */
-  track.addEventListener("touchstart", e => startDrag(e.touches[0].clientX));
-  track.addEventListener("touchmove", e => drag(e.touches[0].clientX));
-  track.addEventListener("touchend", e => endDrag(e.changedTouches[0].clientX));
+  /* Touch */
 
-  /* Mouse events */
-  track.addEventListener("mousedown", e => startDrag(e.clientX));
-  track.addEventListener("mousemove", e => drag(e.clientX));
-  track.addEventListener("mouseup", e => endDrag(e.clientX));
-  track.addEventListener("mouseleave", e => endDrag(e.clientX));
+  track.addEventListener("touchstart", e =>
+    startDrag(e.touches[0].clientX));
+
+  track.addEventListener("touchmove", e =>
+    drag(e.touches[0].clientX));
+
+  track.addEventListener("touchend", e =>
+    endDrag(e.changedTouches[0].clientX));
+
+  /* Mouse */
+
+  track.addEventListener("mousedown", e =>
+    startDrag(e.clientX));
+
+  track.addEventListener("mousemove", e =>
+    drag(e.clientX));
+
+  track.addEventListener("mouseup", e =>
+    endDrag(e.clientX));
+
+  track.addEventListener("mouseleave", e =>
+    endDrag(e.clientX));
 
   moveToIndex(false);
 
@@ -568,6 +602,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 </html>
+
 
 
 
