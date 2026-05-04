@@ -176,6 +176,40 @@ td {
         font-size: 16px !important;
     }
 }
+
+/* ===== FIX CALENDAR PICKER OVERFLOW ===== */
+
+.management-card > div {
+    max-width: 100%;
+}
+
+/* the row with input + button */
+.management-card input[type="text"] {
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+/* make flex wrap properly */
+.management-card div[style*="display:flex"] {
+    flex-wrap: wrap;
+}
+
+/* ensure input shrinks on mobile */
+@media (max-width: 768px) {
+    #calendar-picker {
+        width: 100% !important;
+        flex: 1 1 100%;
+    }
+
+    .management-card div[style*="display:flex"] {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .view-btn {
+        width: 100%;
+    }
+}
 </style>
 
 </head>
