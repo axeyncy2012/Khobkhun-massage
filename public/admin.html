@@ -118,9 +118,63 @@ td {
 .fc { color: white; }
 .fc-toolbar-title { color: #ffbe4d; }
 
-/* 📱 MOBILE */
-@media (max-width: 600px) {
-    .view-btn { width: 100%; margin-top: 10px; }
+/* ================= MOBILE FIX ================= */
+
+@media (max-width: 768px) {
+
+    .management-card {
+        padding: 15px;
+        margin: 10px;
+    }
+
+    /* TABLE FIX */
+    table {
+        width: 100%;
+        min-width: unset !important;
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    td, th {
+        font-size: 12px;
+        padding: 8px;
+    }
+
+    /* BUTTON STACKING */
+    .view-btn {
+        width: 100%;
+        margin-top: 8px;
+    }
+
+    /* FLEX INPUT ROW FIX */
+    .management-card > div[style*="display:flex"] {
+        flex-direction: column;
+    }
+
+    input[type="text"] {
+        width: 100% !important;
+    }
+
+    /* FULLCALENDAR FIX */
+    #calendar {
+        overflow-x: auto;
+    }
+
+    .fc {
+        font-size: 12px;
+    }
+
+    .fc-toolbar {
+        flex-direction: column !important;
+        gap: 10px;
+    }
+
+    .fc-toolbar-title {
+        font-size: 16px !important;
+    }
 }
 </style>
 
