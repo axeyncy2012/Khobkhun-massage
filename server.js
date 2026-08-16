@@ -47,9 +47,9 @@ const BLOCKS_FILE = path.join(__dirname, "blocks.json");
 const DEFAULT_HOURS = {
   0: null,
   1: { open: 13, close: 20 },
-  2: { open: 11, close: 20 },
+  2: { open: 13, close: 20 },
   3: { open: 11, close: 20 },
-  4: { open: 11, close: 20 },
+  4: { open: 13, close: 20 },
   5: { open: 11, close: 20 },
   6: null
 };
